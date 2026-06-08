@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OX Game</title>
+<style>
+body{
+    font-family:Arial,sans-serif;
+    text-align:center;
+    background:#1e3c72;
+    color:white;
+}
+h1{
+    margin-top:20px;
+}
+.board{
+    display:grid;
+    grid-template-columns:repeat(3,100px);
+    gap:5px;
+    justify-content:center;
+    margin:20px auto;
+}
+.cell{
+    width:100px;
+    height:100px;
+    background:white;
+    color:black;
+    font-size:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+button{
+    padding:10px 20px;
+    font-size:18px;
+}
+</style>
+</head>
+<body>
+
+<h1>OX Game</h1>
+<h2 id="status">Player X Turn</h2>
+
+<div class="board" id="board">
+    <div class="cell" onclick="move(0)"></div>
+    <div class="cell" onclick="move(1)"></div>
+    <div class="cell" onclick="move(2)"></div>
+    <div class="cell" onclick="move(3)"></div>
+    <div class="cell" onclick="move(4)"></div>
+    <div class="cell" onclick="move(5)"></div>
+    <div class="cell" onclick="move(6)"></div>
+    <div class="cell" onclick="move(7)"></div>
+    <div class="cell" onclick="move(8)"></div>
+</div>
+
+<h3>
+X Score: <span id="xScore">0</span> |
+O Score: <span id="oScore">0</span>
+</h3>
+
+<button onclick="resetGame()">New Game</button>
+
+<script>
+let board=["","","","","","","","",""];
+let current="X";
+let gameOver=false;
+let xScore=0;
+let oScore=0;
+
+const winPatterns=[
+[0,1,2],[3,4,5],[6,7,8],
+[0,3,6],[1,4,7],[2,5,8],
+[0,4,8],[2,4,6]
+];
+
+function move(i){
+ if(board[i]!==""||gameOver) return;
+
+ board[i]=current;
+ document.getElementsByClassName("cell")[i].innerText=current;
+
+ if(checkWin()){
+   document.getElementById("status").innerText=
+   "Player "+current+" Wins!";
+
+   if(current==="X"){
+      xScore++;
+      document.getElementById("xScore").innerText=xScore;
+   }else{
+      oScore++;
+      document.getElementById("oScore").innerText=oScore;
+   }
+
+   gameOver=true;
+   return;
+ }
+
+ if(!board.includes("")){
+   document.getElementById("status").innerText="Draw!";
+   gameOver=true;
+   return;
+ }
+
+ current=current==="X"?"O":"X";
+ document.getElementById("status").innerText=
+ "Player "+current+" Turn";
+}
+
+function checkWin(){
+ return winPatterns.some(pattern=>{
+   return pattern.every(index=>board[index]===current);
+ });
+}
+
+function resetGame(){
+ board=["","","","","","","","",""];
+ gameOver=false;
+ current="X";
+ document.getElementById("status").innerText=
+ "Player X Turn";
+
+ let cells=document.getElementsByClassName("cell");
+ for(let c of cells) c.innerText="";
+}
+</script>
+
+</body>
+</html>
