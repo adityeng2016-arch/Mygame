@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tic Tac Toe Gold Pro</title>
+<style>
+body{margin:0;font-family:Segoe UI,sans-serif;background:linear-gradient(135deg,#120b00,#3b2a00,#000);color:#fff;text-align:center}
+.top{padding:15px}
+.card{max-width:340px;margin:10px auto;padding:12px;border:2px solid #ffd700;border-radius:18px;background:rgba(255,215,0,.08)}
+h1{color:#ffd700}
+.board{display:grid;grid-template-columns:repeat(3,95px);gap:10px;justify-content:center;margin:20px auto}
+.cell{width:95px;height:95px;border:2px solid #ffd700;border-radius:18px;background:#111;color:#ffd700;font-size:48px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.btn{padding:12px 20px;border:none;border-radius:25px;background:#ffd700;font-weight:bold;margin:6px}
+.win{background:#ffd700;color:#000}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>🏆 Tic Tac Toe Gold Pro</h1>
+<div class="card">🪙 Coins: 1250<br>👤 Player: Aditya</div>
+<button class="btn" onclick="toggleMode()">Mode: 2 Players</button>
+<h2 id="status">Player X Turn</h2>
+<div class="card">X: <span id="xs">0</span> | O: <span id="os">0</span></div>
+<div class="board" id="board"></div>
+<button class="btn" onclick="resetGame()">New Game</button>
+<div class="card">🥇 Leaderboard<br>Player X Wins: <span id="lw">0</span></div>
+</div>
+<script>
+let b=Array(9).fill(""),c="X",g=false,ai=false,xs=0,os=0,lw=0;
+const w=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+const bd=document.getElementById('board');
+for(let i=0;i<9;i++){let d=document.createElement('div');d.className='cell';d.onclick=()=>move(i);bd.appendChild(d);}
+function toggleMode(){ai=!ai;document.querySelector('.btn').innerText=ai?'Mode: AI':'Mode: 2 Players';resetGame();}
+function move(i){
+if(b[i]||g)return;b[i]=c;bd.children[i].innerText=c;
+let p=check(); if(p){p.forEach(n=>bd.children[n].classList.add('win')); g=true;
+document.getElementById('status').innerText=c+' Wins!';
+if(c=='X'){xs++;lw++;xsEl.innerText=xs;lwEl.innerText=lw;} else {os++;osEl.innerText=os;}
+return;}
+if(!b.includes("")){g=true;status.innerText='Draw';return;}
+c=c=='X'?'O':'X';status.innerText='Player '+c+' Turn';
+if(ai&&c=='O') setTimeout(aiMove,400);
+}
+function aiMove(){let e=[];b.forEach((v,i)=>{if(!v)e.push(i)});move(e[Math.floor(Math.random()*e.length)]);}
+function check(){for(let a of w){if(b[a[0]]&&b[a[0]]==b[a[1]]&&b[a[1]]==b[a[2]])return a;}return null;}
+function resetGame(){b=Array(9).fill("");c="X";g=false;status.innerText='Player X Turn';[...bd.children].forEach(x=>{x.innerText='';x.classList.remove('win');});}
+const xsEl=document.getElementById('xs'),osEl=document.getElementById('os'),lwEl=document.getElementById('lw'),status=document.getElementById('status');
+</script>
+</body>
+</html>
